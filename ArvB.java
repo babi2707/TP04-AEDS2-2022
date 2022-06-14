@@ -2,7 +2,7 @@
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP02 - Questão 6 - Pilha Sequencial em Java
+ * TP04 - Questão 1 - Árvore binária em Java
  * 
 ****************************************/
 
@@ -39,20 +39,27 @@ class Arvore {
     }
 
     public boolean pesquisar (String x) {
+        MyIO.println(x);
+        MyIO.print("=>raiz");
         return pesquisar(x, raiz);
     }
 
     public boolean pesquisar (String x, No i) {
+
         boolean resp;
 
         if (i == null) {
             resp = false;
+            MyIO.println(" NAO");
         } else if (x == i.filme.getTitulo_Original()) {
             resp = true;
+            MyIO.println(" SIM");
         } else if (x.compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x)) {
             resp = pesquisar(x, i.esq);
+            MyIO.println(" esq");
         } else {
             resp = pesquisar(x, i.dir);
+            MyIO.println(" dir");
         }
 
         return resp;
@@ -76,25 +83,27 @@ class Arvore {
         return i;
     }
 
-    public void remover (String x) throws Exception {
+    public void remover (String x) {
         raiz = remover(x, raiz);
     }
 
-    private No remover (String x, No i) throws Exception {
+    private No remover (String x, No i) {
+        
 
         if (i == null) {
-            throw new Exception("Erro ao remover!");
-        } else if (x.compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x)) {
-            i.esq = remover(x, i.esq);
-        } else if (x.compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x)) {
-            i.dir = remover(x, i.dir);
-        } else if (i.dir == null) {
-            i = i.esq;
-        } else if (i.esq == null) {
-            i = i.dir;
-        } else {
-            i.esq = maiorEsq(i, i.esq);
-        }
+
+            if (x.compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x)) {
+                i.esq = remover(x, i.esq);
+            } else if (x.compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x)) {
+                i.dir = remover(x, i.dir);
+            } else if (i.dir == null) {
+                i = i.esq;
+            } else if (i.esq == null) {
+                i = i.dir;
+            } else {
+                i.esq = maiorEsq(i, i.esq);
+            }
+        } 
 
         return i;
     }
@@ -111,9 +120,6 @@ class Arvore {
         return j;
     } 
 
-    public void show() {
-
-    }
 }
 
 class Filme {
@@ -129,6 +135,8 @@ class Filme {
     private String Situacao;
     private float Orcamento;
     private ArrayList<String> Key_Words;
+
+    String folder = "./tmp/filmes/";
 
     // ------------------------------------------------------------
 
@@ -299,7 +307,6 @@ class Filme {
     // ----- Nome -----
     public void readNome(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -326,7 +333,6 @@ class Filme {
     // ----- Titulo original -----
     public void readTitulo(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -354,7 +360,6 @@ class Filme {
     // ----- Data -----
     public void readData(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -388,7 +393,6 @@ class Filme {
     // ----- Duração -----
     public void readDuracao(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -428,7 +432,6 @@ class Filme {
     // ----- Genero -----
     public void readGenero(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -456,7 +459,6 @@ class Filme {
     // ----- Idioma original -----
     public void readIdioma(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -482,7 +484,6 @@ class Filme {
     // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -506,7 +507,6 @@ class Filme {
     // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -540,7 +540,6 @@ class Filme {
     // ----- Palavras-chave -----
     public void readKey(String arquivo) throws Exception {
 
-        String folder = "./tmp/filmes/";
         FileReader arq = new FileReader(folder + arquivo);
         BufferedReader readArq = new BufferedReader(arq);
 
@@ -596,8 +595,7 @@ public class ArvB {
         // ----- inicialização das variáveis -----
         String[] s = new String[10000];
         String[] s2 = new String[10000];
-        String[] s3 = new String[10000];
-        int qtd = 0, qtd2 = 0, qtd3 = 0, n;
+        int qtd = 0, qtd2 = 0, n;
         long tempo = System.currentTimeMillis();
         // ----------------------------------------
 
@@ -698,11 +696,24 @@ public class ArvB {
 
         }
 
+        String title[] = new String[1000];
+
+        qtd2 = qtd + 2 + n;
+
+        do {
+            title[qtd2] = MyIO.readLine();
+        } while (isFim(title[qtd2++]) == false);
+
+        qtd--;
+
+        for (int i = 0; i < qtd; i++) {
+            movie.pesquisar(title[i]);
+        }
+
+        
+
         // -----------------------------------------------------------------------------
 
-        Arq.openWrite("748190_sequencial.txt");
-        Arq.println("748190\t " + (System.currentTimeMillis() - tempo) + " ms\t" + movie.count);
-        Arq.close();
 
     }
 }
