@@ -13,18 +13,18 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public int elemento; // conte�do do no
+    public String elemento; // conte�do do no
     public No esq, dir; // filhos da esq e dir
 
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
 
-    public No (int elemento) {
+    public No (String elemento) {
         this(elemento, null, null);
     }
 
-    public No (int elemento, No esq, No dir) {
+    public No (String elemento, No esq, No dir) {
         this.elemento = elemento;
         this.esq = esq;
         this.dir = dir;
@@ -51,19 +51,19 @@ class Arvore {
 
     // ----------------------- pesquisar -----------------------
 
-    public boolean pesquisar (int x) throws Exception {
+    public boolean pesquisar (String x) throws Exception {
         return pesquisar(x, raiz);
     }
 
-    private boolean pesquisar (int x, No i) throws Exception {
+    private boolean pesquisar (String x, No i) throws Exception {
 
         boolean resp;
 
         if (i == null) {
             resp = false;
-        } else if (x == i.elemento) {
+        } else if (x.compareTo(i.elemento) == i.elemento.compareTo(x)) {
             resp = true;
-        } else if (x < i.elemento) {
+        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
             resp = pesquisar(x, i.esq);
         } else {
             resp = pesquisar(x, i.dir);
@@ -76,16 +76,16 @@ class Arvore {
 
     // ----------------------- inserir ----------------------- 
 
-    public void inserir(int x) throws Exception {
+    public void inserir(String x) throws Exception {
         raiz = inserir(x, raiz);
     }
 
-    private No inserir(int x, No i) throws Exception {
+    private No inserir(String x, No i) throws Exception {
         if (i == null) {
             i = new No(x);
-        } else if (x < i.elemento) {
+        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
             i.esq = inserir(x, i.esq);
-        } else if (x > i.elemento) {
+        } else if (x.compareTo(i.elemento) > i.elemento.compareTo(x)) {
             i.dir = inserir(x, i.dir);
         } else {
             throw new Exception("Erro ao inserir!");
@@ -98,20 +98,20 @@ class Arvore {
 
     // ----------------------- remover -----------------------
 
-    public void remover (int x) throws Exception {
+    public void remover (String x) throws Exception {
         raiz = remover(x, raiz);
     }
 
-    private No remover (int x, No i) throws Exception {
+    private No remover (String x, No i) throws Exception {
         
 
         if (i == null) {
             throw new Exception("Erro ao remover!");
 
-        } else if (x < i.elemento) {
+        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
             i.esq = remover(x, i.esq);
 
-        } else if (x > i.elemento) {
+        } else if (x.compareTo(i.elemento) > i.elemento.compareTo(x)) {
             i.dir = remover(x, i.dir);
 
         } else if (i.dir == null) {
@@ -200,39 +200,20 @@ public class ABP {
 
         // ----- inicialização das variáveis -----
         String linha = "";
-        int n, num;
         // ----------------------------------------
 
         Scanner entrada = new Scanner(System.in);
 
-        linha = entrada.nextLine();
+        while(entrada.hasNextLine()) {
 
-        n = Integer.parseInt(linha.trim()); // qtd de casos
-
-        for (int i = 0; i < n; i++) {
             Arvore arvore = new Arvore();
 
-            linha = entrada.nextLine().trim();
-            num = Integer.parseInt(linha); // qtd de números para serem inseridos na árvore
-            String aux = entrada.nextLine().trim(); // números a ser inseridos
-            String[] arv = aux.split(" "); // array para guardar os números
+            linha = entrada.nextLine();
+            String subs = linha.substring(0, 1);
 
-            for (int j = 0; j < num; j++) {
-                arvore.inserir(Integer.parseInt(arv[j]));
+            if ((subs.compareTo("I") == 0) && (linha.length() == 3)) {
+                arvore.inserir(linha.substring(2));
             }
-
-            System.out.println("Case " + (i + 1) + ":");
-            System.out.print("Pre.: ");
-            arvore.caminharPre();
-            System.out.println();
-            System.out.print("In..: ");
-            arvore.caminharCentral();
-            System.out.println();
-            System.out.print("Post: ");
-            arvore.caminharPos();
-            System.out.println();
-            System.out.println();
-
         }
 
         entrada.close();
