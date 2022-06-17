@@ -13,18 +13,18 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public String elemento; // conte�do do no
+    public char elemento; // conte�do do no
     public No esq, dir; // filhos da esq e dir
 
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
 
-    public No (String elemento) {
+    public No (char elemento) {
         this(elemento, null, null);
     }
 
-    public No (String elemento, No esq, No dir) {
+    public No (char elemento, No esq, No dir) {
         this.elemento = elemento;
         this.esq = esq;
         this.dir = dir;
@@ -51,19 +51,19 @@ class Arvore {
 
     // ----------------------- pesquisar -----------------------
 
-    public boolean pesquisar (String x) throws Exception {
+    public boolean pesquisar (char x) throws Exception {
         return pesquisar(x, raiz);
     }
 
-    private boolean pesquisar (String x, No i) throws Exception {
+    private boolean pesquisar (char x, No i) throws Exception {
 
         boolean resp;
 
         if (i == null) {
             resp = false;
-        } else if (x.compareTo(i.elemento) == i.elemento.compareTo(x)) {
+        } else if (x == i.elemento) {
             resp = true;
-        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
+        } else if (x < i.elemento) {
             resp = pesquisar(x, i.esq);
         } else {
             resp = pesquisar(x, i.dir);
@@ -76,16 +76,16 @@ class Arvore {
 
     // ----------------------- inserir ----------------------- 
 
-    public void inserir(String x) throws Exception {
+    public void inserir(char x) throws Exception {
         raiz = inserir(x, raiz);
     }
 
-    private No inserir(String x, No i) throws Exception {
+    private No inserir(char x, No i) throws Exception {
         if (i == null) {
             i = new No(x);
-        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
+        } else if (x < i.elemento) {
             i.esq = inserir(x, i.esq);
-        } else if (x.compareTo(i.elemento) > i.elemento.compareTo(x)) {
+        } else if (x > i.elemento) {
             i.dir = inserir(x, i.dir);
         } else {
             throw new Exception("Erro ao inserir!");
@@ -98,20 +98,20 @@ class Arvore {
 
     // ----------------------- remover -----------------------
 
-    public void remover (String x) throws Exception {
+    public void remover (char x) throws Exception {
         raiz = remover(x, raiz);
     }
 
-    private No remover (String x, No i) throws Exception {
+    private No remover (char x, No i) throws Exception {
         
 
         if (i == null) {
             throw new Exception("Erro ao remover!");
 
-        } else if (x.compareTo(i.elemento) < i.elemento.compareTo(x)) {
+        } else if (x < i.elemento) {
             i.esq = remover(x, i.esq);
 
-        } else if (x.compareTo(i.elemento) > i.elemento.compareTo(x)) {
+        } else if (x > i.elemento) {
             i.dir = remover(x, i.dir);
 
         } else if (i.dir == null) {
@@ -209,10 +209,27 @@ public class ABP {
             Arvore arvore = new Arvore();
 
             linha = entrada.nextLine();
-            String subs = linha.substring(0, 1);
+            char subs = linha.charAt(0);
 
-            if ((subs.compareTo("I") == 0) && (linha.length() == 3)) {
-                arvore.inserir(linha.substring(2));
+            if ((subs == 'I') && (linha.charAt(1) == ' ')) {
+                arvore.inserir(linha.charAt(2));
+            } else if (linha.compareTo("INFIXA") == 0) {
+                arvore.caminharCentral();
+                System.out.println();
+            } else if (linha.compareTo("PREFIXA") == 0) {
+                arvore.caminharPre();
+                System.out.println();
+            } else if (linha.compareTo("POSFIXA") == 0) {
+                arvore.caminharPos();
+                System.out.println();
+            } else if ((subs == 'P') && (linha.charAt(1) == ' ')) {
+                boolean resp = arvore.pesquisar(linha.charAt(2));
+
+                if (resp == true) {
+                    System.out.println(linha.charAt(2) + "existe");
+                } else {
+                    System.out.println("nao existe");
+                }
             }
         }
 
