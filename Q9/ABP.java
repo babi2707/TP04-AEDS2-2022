@@ -200,13 +200,12 @@ public class ABP {
 
         // ----- inicialização das variáveis -----
         String linha = "";
+        Arvore arvore = new Arvore();
         // ----------------------------------------
 
         Scanner entrada = new Scanner(System.in);
 
         while(entrada.hasNextLine()) {
-
-            Arvore arvore = new Arvore();
 
             linha = entrada.nextLine();
             char subs = linha.charAt(0);
@@ -225,11 +224,8 @@ public class ABP {
             } else if ((subs == 'P') && (linha.charAt(1) == ' ')) {
                 boolean resp = arvore.pesquisar(linha.charAt(2));
 
-                if (resp == true) {
-                    System.out.println(linha.charAt(2) + "existe");
-                } else {
-                    System.out.println("nao existe");
-                }
+                System.out.println(resp == true ? linha.charAt(2) + " existe" : "nao existe");
+               
             }
         }
 
