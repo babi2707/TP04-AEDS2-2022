@@ -18,7 +18,8 @@ class No {
     // ------------------------- atributos -------------------------
     
     public char elemento; // conte�do do no
-    public No esq, dir; // filhos da esq e dir
+    public No esq; // filhos da esq
+    public No dir; // filhos da dir
     public No2 outro;
 
     // ------------------------------------------------------------
@@ -46,7 +47,8 @@ class No2 {
     // ------------------------- atributos -------------------------
     
     public Filme elemento; // conte�do do no
-    public No2 esq, dir; // filhos da esq e dir
+    public No2 esq; // filhos da esq
+    public No2 dir; // filhos da dir
 
     // ------------------------------------------------------------
 
@@ -78,6 +80,7 @@ class Arvore {
     // ----------------------- construtores -----------------------
 
     public Arvore() throws Exception  {
+        raiz = null;
         raiz = null;
         inserir('D');
         inserir('R');
@@ -116,7 +119,7 @@ class Arvore {
         boolean resp;
 
         MyIO.println("=> " + x);
-        MyIO.print("raiz");
+        MyIO.print("raiz ");
 
         resp = pesquisar(raiz, x);
 
@@ -713,7 +716,7 @@ public class ArvArv {
 
     // ------------------------------------------------------------
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         MyIO.setCharset("utf-8");
 
@@ -732,7 +735,6 @@ public class ArvArv {
 
             Filme movies = new Filme(); 
 
-            movies = new Filme();
             movies.readNome(s);
             movies.readTitulo(s);
             movies.readData(s);
