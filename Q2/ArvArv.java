@@ -2,7 +2,7 @@
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Questï¿½o 2 - Arvore de arvore em Java
+ * TP04 - Quest?o 2 - Arvore de arvore em Java
  * 
 ****************************************/
 
@@ -17,7 +17,7 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public char elemento; // conteï¿½do do no
+    public char elemento; // conte?do do no
     public No esq; // filhos da esq
     public No dir; // filhos da dir
     public No2 outro;
@@ -46,7 +46,7 @@ class No2 {
 
     // ------------------------- atributos -------------------------
     
-    public Filme elemento; // conteï¿½do do no
+    public Filme elemento; // conte?do do no
     public No2 esq; // filhos da esq
     public No2 dir; // filhos da dir
 
@@ -264,7 +264,7 @@ class Filme {
     private float Orcamento;
     private ArrayList<String> Key_Words;
 
-    String folder = "./tmp/filmes/";
+    String folder = "/tmp/filmes/";
 
     // ------------------------------------------------------------
 
@@ -468,12 +468,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("TÃ­tulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("TÃ­tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -518,7 +518,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Duraï¿½ï¿½o -----
+    // ----- Dura??o -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -609,7 +609,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- SituaÃ§Ã£o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -618,11 +618,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>SituaÃ§Ã£o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("SituaÃ§Ã£o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -632,7 +632,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- OrÃ§amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -640,13 +640,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>OrÃ§amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("OrÃ§amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -702,6 +702,20 @@ class Filme {
 
     // ---------------------------
 
+    // ----- Tudo -----
+    public void readAll (String arquivo) throws Exception {
+        readNome(arquivo);
+        readTitulo(arquivo);
+        readData(arquivo);
+        readDuracao(arquivo);
+        readGenero(arquivo);
+        readIdioma(arquivo);
+        readSituacao(arquivo);
+        readOrcamento(arquivo);
+        readKey(arquivo);
+    }
+    // ----------------
+
     // ------------------------------------------------------------
 }
 
@@ -720,7 +734,7 @@ public class ArvArv {
 
         MyIO.setCharset("utf-8");
 
-        // ----- inicializaï¿½ï¿½o das variï¿½veis -----
+        // ----- inicializa??o das vari?veis -----
         String s, s2, title;
         int n;
         Arvore arvore = new Arvore();
@@ -735,15 +749,7 @@ public class ArvArv {
 
             Filme movies = new Filme(); 
 
-            movies.readNome(s);
-            movies.readTitulo(s);
-            movies.readData(s);
-            movies.readDuracao(s);
-            movies.readGenero(s);
-            movies.readIdioma(s);
-            movies.readSituacao(s);
-            movies.readOrcamento(s);
-            movies.readKey(s);
+            movies.readAll(s);
 
             arvore.inserir(movies);
         }
@@ -752,9 +758,9 @@ public class ArvArv {
         // ----- segunda parte do pub.in -----
     
         s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
-        n = Integer.parseInt(s2); // primeira linha ï¿½ a qtd de objetos a serem inseridos/removidos
+        n = Integer.parseInt(s2); // primeira linha ? a qtd de objetos a serem inseridos/removidos
 
-        // --- for das inserÃ§Ãµes ---
+        // --- for das inserções ---
         for (int i = 0; i < n; i++) {
 
             s2 = MyIO.readLine();
@@ -768,15 +774,7 @@ public class ArvArv {
                 Filme filminho = new Filme(); 
 
                 // ----- ler o arquivo -----
-                filminho.readNome(x);
-                filminho.readTitulo(x);
-                filminho.readData(x);
-                filminho.readDuracao(x);
-                filminho.readGenero(x);
-                filminho.readIdioma(x);
-                filminho.readSituacao(x);
-                filminho.readOrcamento(x);
-                filminho.readKey(x);
+                filminho.readAll(x);
                 // -------------------------
 
                 // ----- inserir -----
