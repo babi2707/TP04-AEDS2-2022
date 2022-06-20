@@ -1,4 +1,3 @@
-package Q1;
 /***************************************
  * 
  * @author Barbara Luciano Araujo
