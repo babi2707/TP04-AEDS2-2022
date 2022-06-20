@@ -2,7 +2,7 @@
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Questï¿½o 5 - Tabela hash com Reserva em Java
+ * TP04 - Quest?o 5 - Arvore Alvinegra em Java
  * 
 ****************************************/
 
@@ -13,23 +13,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.io.IOException;
 
-class HashDR {
+class HashRehash {
 
     // ------------------------- atributos -------------------------
     Filme[] tabela;
-    int m1, m2, m, reserva;
+    int m;
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
-    public HashDR() {}
+    public HashRehash() {}
 
-    public HashDR(int m1, int m2) {
-        this.m1 = m1;
-        this.m2 = m2;
-        this.m = m1 + m2;
+    public HashRehash(int m) {
+        this.m = m;
         this.tabela = new Filme[this.m];
 
-        for (int i = 0; i < m1; i++){
+        for (int i = 0; i < m; i++){
             tabela[i] = null;
         }
 
@@ -43,7 +41,7 @@ class HashDR {
             soma += x; 
         }
 
-        return soma % m1;
+        return soma % m;
     }
 
     // ----------------------- inserir -----------------------
@@ -58,10 +56,13 @@ class HashDR {
             if (tabela[pos] == null) {
                 tabela[pos] = elemento;
                 resp = true;
-            } else if (reserva < m2) {
-                tabela[m1 + reserva] = elemento;
-                reserva++;
-                resp = true;
+            } else {
+                pos = rehash(elemento.getTitulo_Original());
+
+                if (tabela[pos] == null) {
+                    tabela[pos] = elemento;
+                    resp = true;
+                }
             }
         }
 
@@ -81,17 +82,32 @@ class HashDR {
                 MyIO.println("Posicao: " + pos);
                 resp = true;
             } else {
-                for (int i = 0; i < reserva; i++) {
-                    if (tabela[m1 + i].getTitulo_Original().compareTo(elemento) == 0) {
-                        MyIO.println("Posicao: " + (m1 + i));
+                pos = rehash(elemento);
+
+                if (tabela[pos] != null) {
+                    if (tabela[pos].getTitulo_Original().compareTo(elemento) == 0) {
+                        MyIO.println("Posicao: " + pos);
                         resp = true;
-                        i = reserva;
                     }
                 }
             }
         }
 
         return resp;
+    }
+
+    // ---------------------------------------------------------
+
+    // ----------------------- rehash -----------------------
+
+    public int rehash (String elemento) {
+        int soma = 0;
+
+        for(char x : elemento.toCharArray()) {
+            soma += x;
+        }
+
+        return ++soma % m;
     }
 
     // -------------------------------------------------------
@@ -317,12 +333,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("Tï¿½tulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("Tï¿½tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -367,7 +383,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Dura??o -----
+    // ----- Duração -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -458,7 +474,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situaï¿½ï¿½o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -467,11 +483,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situaï¿½ï¿½o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situaï¿½ï¿½o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -481,7 +497,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Orï¿½amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -489,13 +505,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Orï¿½amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Orï¿½amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -583,7 +599,7 @@ public class Hash {
 
         // ----- inicializa??o das vari?veis -----
         String s;
-        HashDR table = new HashDR(21, 9);
+        HashRehash table = new HashRehash(21);
         long tempo = System.currentTimeMillis();
         // ----------------------------------------
 
