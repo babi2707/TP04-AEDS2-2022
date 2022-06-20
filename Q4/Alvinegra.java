@@ -1,9 +1,8 @@
-package Q1;
-/***************************************
+/****************************************
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Quest�o 1 - Árvore binária em Java
+ * TP04 - Questão 4 - Arvore Alvinegra em Java
  * 
 ****************************************/
 
@@ -18,21 +17,29 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public Filme filme; // conte�do do no
+    public Filme filme; // conte?do do no
     public No esq, dir; // filhos da esq e dir
+    public boolean cor; // cor do no
 
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
 
+    public No () {}
+
     public No (Filme filme) {
-        this(filme, null, null);
+        this(filme, false, null, null);
     }
 
-    public No (Filme filme, No esq, No dir) {
+    public No (Filme filme, boolean cor) {
+        this(filme, cor, null, null);
+    }
+
+    public No (Filme filme, boolean cor, No esq, No dir) {
         this.filme = filme;
         this.esq = esq;
         this.dir = dir;
+        this.cor = cor;
     }
 
     // ------------------------------------------------------------
@@ -56,13 +63,13 @@ class Arvore {
 
     // ----------------------- pesquisar -----------------------
 
-    public boolean pesquisar (String x) throws Exception {
+    public boolean pesquisar (String x) {
         MyIO.println(x);
-        MyIO.print("=>raiz");
+        MyIO.print("raiz");
         return pesquisar(x, raiz);
     }
 
-    private boolean pesquisar (String x, No i) throws Exception {
+    private boolean pesquisar (String x, No i) {
 
         boolean resp;
 
@@ -88,73 +95,195 @@ class Arvore {
     // ----------------------- inserir ----------------------- 
 
     public void inserir(Filme x) throws Exception {
-        raiz = inserir(x, raiz);
-    }
-
-    private No inserir(Filme x, No i) throws Exception {
-        if (i == null) {
-            i = new No(x);
-        } else if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
-            i.esq = inserir(x, i.esq);
-        } else if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
-            i.dir = inserir(x, i.dir);
-        } else {
-            throw new Exception("Erro ao inserir!");
-        }
-
-        return i;
-    }
-
-    // -------------------------------------------------------
-
-    // ----------------------- remover -----------------------
-
-    public void remover (String x) throws Exception {
-        raiz = remover(x, raiz);
-    }
-
-    private No remover (String x, No i) throws Exception {
         
-
-        if (i == null) {
-            throw new Exception("Erro ao remover!");
-
-        } else if (x.compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x)) {
-            i.esq = remover(x, i.esq);
-
-        } else if (x.compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x)) {
-            i.dir = remover(x, i.dir);
-
-        } else if (i.dir == null) {
-            i = i.esq;
-
-        } else if (i.esq == null) {
-            i = i.dir;
-
-        } else {
-            i.esq = maiorEsq(i, i.esq);
+        // --- se a arvore estiver vazia ---
+        if (raiz == null) {
+            raiz = new No(x);
         }
+        // ---------------------------------
 
-        return i;
+        // --- se tiver 1 elemento ---
+        else if (raiz.esq == null && raiz.dir == null) {
+            if (x.getTitulo_Original().compareTo(raiz.filme.getTitulo_Original()) < raiz.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                raiz.esq = new No(x);
+            } else {
+                raiz.dir = new No(x);
+            }
+        }
+        // ----------------------------
+
+        // --- se tiver 2 elementos (raiz + dir) ---
+        else if (raiz.esq == null) {
+            if (x.getTitulo_Original().compareTo(raiz.filme.getTitulo_Original()) < raiz.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                raiz.esq = new No(x);
+            } else if (x.getTitulo_Original().compareTo(raiz.dir.filme.getTitulo_Original()) < raiz.dir.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                raiz.esq = new No(raiz.filme);
+                raiz.filme = x;
+            } else {
+                raiz.esq = new No(raiz.filme);
+                raiz.filme = raiz.dir.filme;
+                raiz.dir.filme = x;
+            }
+
+            raiz.esq.cor = raiz.dir.cor = false;
+        }
+        // -----------------------------------------
+
+        // --- se tiver 2 elementos (raiz + esq) ---
+        else if (raiz.dir == null) {
+            if (x.getTitulo_Original().compareTo(raiz.filme.getTitulo_Original()) > raiz.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                raiz.dir = new No(x);
+            } else if (x.getTitulo_Original().compareTo(raiz.dir.filme.getTitulo_Original()) > raiz.dir.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                raiz.dir = new No(raiz.filme);
+                raiz.filme = x;
+            } else {
+                raiz.dir = new No(raiz.filme);
+                raiz.filme = raiz.esq.filme;
+                raiz.esq.filme = x;
+            }
+
+            raiz.dir.cor = raiz.esq.cor = false;
+        }
+        // -----------------------------------------
+
+        // --- se tiver 3 ou mais elementos ---
+        else {
+            inserir(x, null, null, null, raiz);
+        }
+        // -------------------------------------
+
+        raiz.cor = false; // raiz é sempre branca
+    }
+
+    private void inserir (Filme x, No bisavo, No avo, No pai, No i) throws Exception {
+        if (i == null) {
+            if (x.getTitulo_Original().compareTo(pai.filme.getTitulo_Original()) < pai.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                i = pai.esq = new No(x, true);
+            } else {
+                i = pai.dir = new No (x, true);
+            }
+
+            // --- verificar a cor do pai (nao pode ser preto) ---
+            if (pai.cor == true) {
+                balancear(bisavo, avo, pai, i);
+            }
+            // ---------------------------------------------------
+        } else {
+            // --- 4-no: fragmentação ---
+            if (i.esq != null && i.dir != null && i.esq.cor == true && i.dir.cor == true) {
+                i.cor = true;
+                i.esq.cor = i.dir.cor = false;
+
+                if (i == raiz) {
+                    i.cor = false;
+                } else if (pai.cor == true) {
+                    balancear (bisavo, avo, pai, i);
+                }
+            }
+
+            if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                inserir(x, avo, pai, i, i.esq);
+            } else if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
+                inserir(x, avo, pai, i, i.dir);
+            } else {
+                throw new Exception("Erro inserir (elemento repetido)!");
+            }
+            // --------------------------
+        }
     }
 
     // -------------------------------------------------------
 
-    // ----------------------- maior esquerda -----------------------
+    // ----------------------- balancear -----------------------
 
-    private No maiorEsq (No i, No j) {
+    private void balancear (No bisavo, No avo, No pai, No i) {
+        
+        // --- se pai for preto, reequilibrar a arvore ---
+        if (pai.cor == true) {
 
-        if (j.dir == null) {
-            i.filme = j.filme;
-            j = j.esq;
-        } else {
-            j.dir = maiorEsq(i, j.dir);
+            // --- 4 tipos de reequilibrios ---
+
+            // --- esq ou dir-esq ---
+            if (pai.filme.getTitulo_Original().compareTo(avo.filme.getTitulo_Original()) > avo.filme.getTitulo_Original().compareTo(pai.filme.getTitulo_Original())) {
+                if (i.filme.getTitulo_Original().compareTo(pai.filme.getTitulo_Original()) > pai.filme.getTitulo_Original().compareTo(i.filme.getTitulo_Original())) {
+                    avo = rotacionarEsq(avo);
+                } else {
+                    avo = rotacionarDirEsq(avo);
+                }
+            }
+            // ----------------------
+
+            // --- dir ou esq-dir ---
+            else  {
+                if (i.filme.getTitulo_Original().compareTo(pai.filme.getTitulo_Original()) < pai.filme.getTitulo_Original().compareTo(i.filme.getTitulo_Original())) {
+                    avo = rotacionarDir(avo);
+                } else {
+                    avo = rotacionarEsqDir(avo);
+                }
+            }
+            // ----------------------
+
+            // --------------------------------
+
+            if (bisavo == null) {
+                raiz = avo;
+            } else if (avo.filme.getTitulo_Original().compareTo(bisavo.filme.getTitulo_Original()) < bisavo.filme.getTitulo_Original().compareTo(avo.filme.getTitulo_Original())) {
+                bisavo.esq = avo;
+            } else {
+                bisavo.dir = avo;
+            }
+
+            // --- reestabelecer as cores ---
+            avo.cor = false;
+            avo.esq.cor = avo.dir.cor = true;
+            // ------------------------------
         }
-
-        return j;
+        // -----------------------------------------------
     } 
 
-    // ---------------------------------------------------------------
+    // ----------------------------------------------------------
+
+    // ----------------------- rotacionar -----------------------
+
+    // ---------- simples direita ----------
+    private No rotacionarDir (No no) {
+        No noEsq = no.esq;
+        No noEsqDir = noEsq.dir;
+
+        noEsq.dir = no;
+        no.esq = noEsqDir;
+
+        return noEsq;
+    }
+    // -------------------------------------
+
+    // ---------- simples esquerda ----------
+    private No rotacionarEsq (No no) {
+        No noDir = no.dir;
+        No noDirEsq = noDir.esq;
+
+        noDir.esq = no;
+        no.dir = noDirEsq;
+
+        return noDir;
+    }
+    // --------------------------------------
+
+    // ---------- dupla direita-esquerda ----------
+    private No rotacionarDirEsq (No no) {
+        no.dir = rotacionarDir(no.dir);
+        return rotacionarEsq(no);
+    }
+    // --------------------------------------------
+
+    // ---------- dupla esquerda-direita ----------
+    private No rotacionarEsqDir (No no) {
+        no.esq = rotacionarEsq(no.esq);
+        return rotacionarDir(no);
+    }
+    // --------------------------------------------
+
+    // ----------------------------------------------------------
 }
 
 class Filme {
@@ -375,12 +504,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("T�tulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("T�tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -425,7 +554,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Dura��o -----
+    // ----- Dura??o -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -516,7 +645,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situa��o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -525,11 +654,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situa��o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situa��o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -539,7 +668,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Or�amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -547,13 +676,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Or�amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Or�amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -609,10 +738,22 @@ class Filme {
 
     // ---------------------------
 
-    // ------------------------------------------------------------
+    // ----- tudo -----
+    public void readAll(String arquivo) throws Exception {
+        readNome(arquivo);
+        readTitulo(arquivo);
+        readData(arquivo);
+        readDuracao(arquivo);
+        readGenero(arquivo);
+        readIdioma(arquivo);
+        readSituacao(arquivo);
+        readOrcamento(arquivo);
+        readKey(arquivo);
+    }
+    // ----------------
 }
 
-public class ArvB {
+public class Alvinegra {
 
     // --------------------------- is FIM -------------------------
 
@@ -623,14 +764,14 @@ public class ArvB {
 
     // ------------------------------------------------------------
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         MyIO.setCharset("utf-8");
 
-        // ----- inicializa��o das vari�veis -----
-        String s, s2, title;
-        int n;
+        // ----- inicializa??o das vari?veis -----
+        String s;
         Arvore arvore = new Arvore();
+        long tempo = System.currentTimeMillis();
         // ----------------------------------------
 
         // ----- primeira parte do pub.in -----
@@ -642,73 +783,16 @@ public class ArvB {
             Filme movies = new Filme(); 
 
             movies = new Filme();
-            movies.readNome(s);
-            movies.readTitulo(s);
-            movies.readData(s);
-            movies.readDuracao(s);
-            movies.readGenero(s);
-            movies.readIdioma(s);
-            movies.readSituacao(s);
-            movies.readOrcamento(s);
-            movies.readKey(s);
+            movies.readAll(s);
 
             arvore.inserir(movies);
         }
         // ------------------------------------
 
-        // ----- segunda parte do pub.in -----
-    
-        s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
-        n = Integer.parseInt(s2); // primeira linha � a qtd de objetos a serem inseridos/removidos
-
-        // --- for das inser��es e remo��es ---
-        for (int i = 0; i < n; i++) {
-
-            s2 = MyIO.readLine();
-            String linha = s2.substring(0, 1);
-            String x = s2.substring(2);
-            
-            
-            // ----- inserir -----
-            if (linha.compareTo("I") == 0) {
-
-                Filme filminho = new Filme(); 
-
-                // ----- ler o arquivo -----
-                filminho.readNome(x);
-                filminho.readTitulo(x);
-                filminho.readData(x);
-                filminho.readDuracao(x);
-                filminho.readGenero(x);
-                filminho.readIdioma(x);
-                filminho.readSituacao(x);
-                filminho.readOrcamento(x);
-                filminho.readKey(x);
-                // -------------------------
-
-                // ----- inserir -----
-                arvore.inserir(filminho);
-                // -------------------
-
-            }
-            // --------------------
-
-            // ----- remover -----
-
-            else if (linha.compareTo("R") == 0) {
-
-                arvore.remover(x);
-
-            }
-
-            // --------------------------
-
-        }
-        // ------------------------------------
-
         // -----------------------------------
 
-        // ----- terceira parte do pub.in -----
+        // ----- segunda parte do pub.in -----
+        String title = "";
         while (true) {
             title = MyIO.readLine();
 
@@ -716,7 +800,13 @@ public class ArvB {
 
             arvore.pesquisar(title);
         }
-        // ------------------------------------
+        // -----------------------------------
+
+        // ----- arquivo log -----
+        Arq.openWrite("748190_alvinegra.txt");
+        Arq.println("748190\t " + (System.currentTimeMillis() - tempo) + " ms\t");
+        Arq.close();
+        // -----------------------
 
     }
 }

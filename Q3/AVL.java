@@ -1,9 +1,8 @@
-package Q1;
-/***************************************
+/****************************************
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Questï¿½o 1 - Ãrvore binÃ¡ria em Java
+ * TP04 - Quest?o 3 - Arvore AVL em Java
  * 
 ****************************************/
 
@@ -18,24 +17,38 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public Filme filme; // conteï¿½do do no
+    public Filme filme; // conte?do do no
     public No esq, dir; // filhos da esq e dir
+    public int nivel; // n?mero de n?veis abaixo do no
 
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
 
     public No (Filme filme) {
-        this(filme, null, null);
+        this(filme, null, null, 1);
     }
 
-    public No (Filme filme, No esq, No dir) {
+    public No (Filme filme, No esq, No dir, int nivel) {
         this.filme = filme;
         this.esq = esq;
         this.dir = dir;
+        this.nivel = nivel;
     }
 
     // ------------------------------------------------------------
+
+    // ----------------------- calcular nivel -----------------------
+
+    public void setNivel () {
+        this.nivel = 1 + Math.max(getNivel(esq), getNivel(dir));
+    }
+
+    public static int getNivel (No no) {
+        return (no == null) ? 0 : no.nivel;
+    }
+
+    // ---------------------------------------------------------------
 }
 
 class Arvore {
@@ -56,13 +69,13 @@ class Arvore {
 
     // ----------------------- pesquisar -----------------------
 
-    public boolean pesquisar (String x) throws Exception {
+    public boolean pesquisar (String x) {
         MyIO.println(x);
-        MyIO.print("=>raiz");
+        MyIO.print("raiz");
         return pesquisar(x, raiz);
     }
 
-    private boolean pesquisar (String x, No i) throws Exception {
+    private boolean pesquisar (String x, No i) {
 
         boolean resp;
 
@@ -102,7 +115,7 @@ class Arvore {
             throw new Exception("Erro ao inserir!");
         }
 
-        return i;
+        return balancear(i);
     }
 
     // -------------------------------------------------------
@@ -135,7 +148,7 @@ class Arvore {
             i.esq = maiorEsq(i, i.esq);
         }
 
-        return i;
+        return balancear(i);
     }
 
     // -------------------------------------------------------
@@ -155,6 +168,85 @@ class Arvore {
     } 
 
     // ---------------------------------------------------------------
+
+    // ----------------------- balancear -----------------------
+
+    private No balancear (No no) throws Exception {
+
+        if (no != null) {
+            int fator = No.getNivel(no.dir) - No.getNivel(no.esq);
+
+            // ----- se balanceada -----
+            if (Math.abs(fator) <= 1) {
+                no.setNivel();
+            }
+            // -------------------------
+
+            // ----- se desbalanceada para direita -----
+            else if (fator == 2) {
+                int fatorFilhoDir = No.getNivel(no.dir.dir) - No.getNivel(no.dir.esq);
+
+                // --- filho da direita tamb?m desbalanceado ---
+                if (fatorFilhoDir == -1) { no.dir = rotacionarDir(no.dir); }
+                // ---------------------------------------------
+
+                no = rotacionarEsq(no);
+            }
+            // -----------------------------------------
+
+            // ----- se desbalanceada para esquerda -----
+            else if (fator == -2) {
+                int fatorFilhoEsq = No.getNivel(no.esq.dir) - No.getNivel(no.esq.esq);
+
+                // --- filho da esquerda tamb?m desbalanceado ---
+                if (fatorFilhoEsq == 1) { no.esq = rotacionarEsq(no.esq); }
+                // ----------------------------------------------
+
+                no = rotacionarDir(no);
+            }
+            // ------------------------------------------
+
+            else {
+                throw new Exception("Erro no No (" + no.filme + ") com fator de balanceamento (" + fator + ") invalido!");
+            }
+        }
+
+        return no;
+    } 
+
+    // ----------------------------------------------------------
+
+    // ----------------------- rotacionar -----------------------
+
+    // ---------- simples direita ----------
+    private No rotacionarDir (No no) {
+        No noEsq = no.esq;
+        No noEsqDir = noEsq.dir;
+
+        noEsq.dir = no;
+        no.esq = noEsqDir;
+        no.setNivel();
+        noEsq.setNivel();
+
+        return noEsq;
+    }
+    // -------------------------------------
+
+    // ---------- simples esquerda ----------
+    private No rotacionarEsq (No no) {
+        No noDir = no.dir;
+        No noDirEsq = noDir.esq;
+
+        noDir.esq = no;
+        no.dir = noDirEsq;
+        no.setNivel();
+        noDir.setNivel();
+
+        return noDir;
+    }
+    // --------------------------------------
+
+    // ----------------------------------------------------------
 }
 
 class Filme {
@@ -171,7 +263,7 @@ class Filme {
     private float Orcamento;
     private ArrayList<String> Key_Words;
 
-    String folder = "./tmp/filmes/";
+    String folder = "/tmp/filmes/";
 
     // ------------------------------------------------------------
 
@@ -375,12 +467,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("Tï¿½tulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("Tï¿½tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -425,7 +517,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Duraï¿½ï¿½o -----
+    // ----- Dura??o -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -516,7 +608,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situaï¿½ï¿½o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -525,11 +617,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situaï¿½ï¿½o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situaï¿½ï¿½o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -539,7 +631,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Orï¿½amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -547,13 +639,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Orï¿½amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Orï¿½amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -609,10 +701,22 @@ class Filme {
 
     // ---------------------------
 
-    // ------------------------------------------------------------
+    // ----- tudo -----
+    public void readAll(String arquivo) throws Exception {
+        readNome(arquivo);
+        readTitulo(arquivo);
+        readData(arquivo);
+        readDuracao(arquivo);
+        readGenero(arquivo);
+        readIdioma(arquivo);
+        readSituacao(arquivo);
+        readOrcamento(arquivo);
+        readKey(arquivo);
+    }
+    // ----------------
 }
 
-public class ArvB {
+public class AVL {
 
     // --------------------------- is FIM -------------------------
 
@@ -623,14 +727,15 @@ public class ArvB {
 
     // ------------------------------------------------------------
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         MyIO.setCharset("utf-8");
 
-        // ----- inicializaï¿½ï¿½o das variï¿½veis -----
-        String s, s2, title;
+        // ----- inicializa??o das vari?veis -----
+        String s;
         int n;
         Arvore arvore = new Arvore();
+        long tempo = System.currentTimeMillis();
         // ----------------------------------------
 
         // ----- primeira parte do pub.in -----
@@ -642,26 +747,19 @@ public class ArvB {
             Filme movies = new Filme(); 
 
             movies = new Filme();
-            movies.readNome(s);
-            movies.readTitulo(s);
-            movies.readData(s);
-            movies.readDuracao(s);
-            movies.readGenero(s);
-            movies.readIdioma(s);
-            movies.readSituacao(s);
-            movies.readOrcamento(s);
-            movies.readKey(s);
+            movies.readAll(s);
 
             arvore.inserir(movies);
         }
         // ------------------------------------
 
         // ----- segunda parte do pub.in -----
-    
-        s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
-        n = Integer.parseInt(s2); // primeira linha ï¿½ a qtd de objetos a serem inseridos/removidos
 
-        // --- for das inserï¿½ï¿½es e remoï¿½ï¿½es ---
+        String s2 = "";
+        s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
+        n = Integer.parseInt(s2); // primeira linha ? a qtd de objetos a serem inseridos/removidos
+
+        // --- for das inser??es e remo??es ---
         for (int i = 0; i < n; i++) {
 
             s2 = MyIO.readLine();
@@ -675,15 +773,7 @@ public class ArvB {
                 Filme filminho = new Filme(); 
 
                 // ----- ler o arquivo -----
-                filminho.readNome(x);
-                filminho.readTitulo(x);
-                filminho.readData(x);
-                filminho.readDuracao(x);
-                filminho.readGenero(x);
-                filminho.readIdioma(x);
-                filminho.readSituacao(x);
-                filminho.readOrcamento(x);
-                filminho.readKey(x);
+                filminho.readAll(x);
                 // -------------------------
 
                 // ----- inserir -----
@@ -697,7 +787,7 @@ public class ArvB {
 
             else if (linha.compareTo("R") == 0) {
 
-                arvore.remover(x);
+                //arvore.remover(x);
 
             }
 
@@ -709,6 +799,7 @@ public class ArvB {
         // -----------------------------------
 
         // ----- terceira parte do pub.in -----
+        String title = "";
         while (true) {
             title = MyIO.readLine();
 
@@ -717,6 +808,12 @@ public class ArvB {
             arvore.pesquisar(title);
         }
         // ------------------------------------
+
+        // ----- arquivo log -----
+        Arq.openWrite("748190_avl.txt");
+        Arq.println("748190\t " + (System.currentTimeMillis() - tempo) + " ms\t");
+        Arq.close();
+        // -----------------------
 
     }
 }
