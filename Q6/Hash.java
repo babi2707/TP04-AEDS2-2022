@@ -2,7 +2,7 @@
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Quest?o 5 - Arvore Alvinegra em Java
+ * TP04 - QuestÃ£o 6 - Tabela Hash com rehash em Java
  * 
 ****************************************/
 
@@ -333,12 +333,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("Título original")) {
+            while (!linha.contains("Tï¿½tulo original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Tï¿½tulo original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -383,7 +383,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Duração -----
+    // ----- Duraï¿½ï¿½o -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -474,7 +474,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situação -----
+    // ----- Situaï¿½ï¿½o -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -483,11 +483,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situação")) {
+            while (!linha.contains("<bdi>Situaï¿½ï¿½o")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situaï¿½ï¿½o ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -497,7 +497,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Orçamento -----
+    // ----- Orï¿½amento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -505,13 +505,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Orçamento")) {
+        while (!linha.contains("<p><strong><bdi>Orï¿½amento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Orçamento", "");
+        linha = linha.replace("Orï¿½amento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -635,7 +635,7 @@ public class Hash {
         // -----------------------------------
 
         // ----- arquivo log -----
-        Arq.openWrite("748190_hashReserva.txt");
+        Arq.openWrite("748190_hashRehash.txt");
         Arq.println("748190\t " + (System.currentTimeMillis() - tempo) + " ms\t");
         Arq.close();
         // -----------------------
