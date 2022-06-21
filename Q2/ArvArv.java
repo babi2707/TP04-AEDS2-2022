@@ -2,7 +2,7 @@
  * 
  * @author Barbara Luciano Araujo
  * Matricula: 748190
- * TP04 - Quest�o 2 - Arvore de arvore em Java
+ * TP04 - Quest?o 2 - Arvore de arvore em Java
  * 
 ****************************************/
 
@@ -17,9 +17,8 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public char elemento; // conte�do do no
-    public No esq; // filhos da esq
-    public No dir; // filhos da dir
+    public char elemento; // conte?do do no
+    public No esq, dir; // filhos da esq e dir
     public No2 outro;
 
     // ------------------------------------------------------------
@@ -46,9 +45,8 @@ class No2 {
 
     // ------------------------- atributos -------------------------
     
-    public Filme elemento; // conte�do do no
-    public No2 esq; // filhos da esq
-    public No2 dir; // filhos da dir
+    public Filme elemento; // conte?do do no
+    public No2 esq, dir; // filhos da esq e dir
 
     // ------------------------------------------------------------
 
@@ -79,7 +77,7 @@ class Arvore {
 
     // ----------------------- construtores -----------------------
 
-    public Arvore() throws Exception {
+    public Arvore() throws Exception  {
         raiz = null;
         inserir('D');
         inserir('R');
@@ -111,90 +109,6 @@ class Arvore {
 
     // ------------------------------------------------------------
 
-    // ----------------------- inserir ----------------------- 
-
-    public void inserir(char x) throws Exception {
-        raiz = inserir(x, raiz);
-    }
-
-    private No inserir(char x, No i) throws Exception {
-        if (i == null) {
-            i = new No(x);
-
-        } else if (x < i.elemento) {
-            i.esq = inserir(x, i.esq);
-
-        } else if (x > i.elemento) {
-            i.dir = inserir(x, i.dir);
-
-        } else {
-            throw new Exception("Erro ao inserir!");
-        }
-
-        return i;
-    }
-
-    public void inserir(Filme x) throws Exception {
-        inserir(x, raiz);
-    }
-
-    public void inserir(Filme x, No i) throws Exception {
-        if (i == null) {
-            throw new Exception("Erro ao inserir: caractere invalido!");
-
-        } else if (x.getTitulo_Original().charAt(0) < i.elemento) {
-            inserir(x, i.esq);
-
-        } else if (x.getTitulo_Original().charAt(0) > i.elemento) {
-            inserir(x, i.dir);
-
-        } else {
-            i.outro = inserir(x, i.outro);
-        }
-    }
-
-    private No2 inserir(Filme x, No2 i) throws Exception {
-        if (i == null) {
-            i = new No2(x);
-
-        } else if (x.getTitulo_Original().compareTo(i.elemento.getTitulo_Original()) < 0) {
-            i.esq = inserir(x, i.esq);
-
-        } else if (x.getTitulo_Original().compareTo(i.elemento.getTitulo_Original()) > 0) {
-            i.dir = inserir(x, i.dir);
-
-        } else {
-            throw new Exception("Erro ao inserir: elemento existente!");
-        }
-
-        return i;
-    }
-
-    // -------------------------------------------------------
-
-    // ----------------------- mostrar -----------------------
-
-    public void mostrar () {
-        mostrar(raiz);
-    }
-
-    public void mostrar (No i) {
-        if (i != null) {
-            mostrar(i.esq);
-            mostrar(i.outro);
-            mostrar(i.dir);
-        }
-    }
-
-    public void mostrar (No2 i) {
-        if (i != null) {
-            mostrar(i.esq);
-            mostrar(i.dir);
-        }
-    }
-
-    // -------------------------------------------------------
-
     // ----------------------- pesquisar -----------------------
 
     public void pesquisar (String x) {
@@ -202,7 +116,7 @@ class Arvore {
         boolean resp;
 
         MyIO.println("=> " + x);
-        MyIO.print("raiz ");
+        MyIO.print("raiz");
 
         resp = pesquisar(raiz, x);
 
@@ -256,6 +170,81 @@ class Arvore {
     }
 
     // ---------------------------------------------------------
+
+    // ----------------------- inserir ----------------------- 
+
+    public void inserir(char x) throws Exception {
+        raiz = inserir(x, raiz);
+    }
+
+    private No inserir(char x, No i) throws Exception {
+        if (i == null) {
+            i = new No(x);
+        } else if (x < i.elemento) {
+            i.esq = inserir(x, i.esq);
+        } else if (x > i.elemento) {
+            i.dir = inserir(x, i.dir);
+        } else {
+            throw new Exception("Erro ao inserir!");
+        }
+
+        return i;
+    }
+
+    public void inserir(Filme x) throws Exception {
+        inserir(x, raiz);
+    }
+
+    public void inserir(Filme x, No i) throws Exception {
+        if (i == null) {
+            throw new Exception("Erro ao inserir: caractere invalido!");
+        } else if (x.getTitulo_Original().charAt(0) < i.elemento) {
+            inserir(x, i.esq);
+        } else if (x.getTitulo_Original().charAt(0) > i.elemento) {
+            inserir(x, i.dir);
+        } else {
+            i.outro = inserir(x, i.outro);
+        }
+    }
+
+    private No2 inserir(Filme x, No2 i) throws Exception {
+        if (i == null) {
+            i = new No2(x);
+        } else if (x.getTitulo_Original().compareTo(i.elemento.getTitulo_Original()) < 0) {
+            i.esq = inserir(x, i.esq);
+        } else if (x.getTitulo_Original().compareTo(i.elemento.getTitulo_Original()) > 0) {
+            i.dir = inserir(x, i.dir);
+        } else {
+            throw new Exception("Erro ao inserir: elemento existente!");
+        }
+
+        return i;
+    }
+
+    // -------------------------------------------------------
+
+    // ----------------------- mostrar -----------------------
+
+    public void mostrar () {
+        mostrar(raiz);
+    }
+
+    public void mostrar (No i) {
+        if (i != null) {
+            mostrar(i.esq);
+            mostrar(i.outro);
+            mostrar(i.dir);
+        }
+    }
+
+    public void mostrar (No2 i) {
+        if (i != null) {
+            mostrar(i.esq);
+            mostrar(i.dir);
+        }
+    }
+
+    // -------------------------------------------------------
 }
 
 class Filme {
@@ -526,7 +515,7 @@ class Filme {
 
     // ----------------
 
-    // ----- Dura��o -----
+    // ----- Dura??o -----
     public void readDuracao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -710,8 +699,8 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Tudo -----
-    public void readAll (String arquivo) throws Exception {
+    // ----- tudo -----
+    public void readAll(String arquivo) throws Exception {
         readNome(arquivo);
         readTitulo(arquivo);
         readData(arquivo);
@@ -738,9 +727,11 @@ public class ArvArv {
 
     // ------------------------------------------------------------
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String args[]) throws Exception {
 
-        // ----- inicializa��o das vari�veis -----
+        MyIO.setCharset("utf-8");
+
+        // ----- inicializa??o das vari?veis -----
         String s, s2, title;
         int n;
         Arvore arvore = new Arvore();
@@ -757,16 +748,16 @@ public class ArvArv {
 
             movies.readAll(s);
 
-            arvore.inserir(movies);
+            //arvore.inserir(movies);
         }
         // ------------------------------------
 
         // ----- segunda parte do pub.in -----
     
         s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
-        n = Integer.parseInt(s2); // primeira linha � a qtd de objetos a serem inseridos/removidos
+        n = Integer.parseInt(s2); // primeira linha ? a qtd de objetos a serem inseridos/removidos
 
-        // --- for das inserções ---
+        // --- for das inser��es ---
         for (int i = 0; i < n; i++) {
 
             s2 = MyIO.readLine();
@@ -784,7 +775,7 @@ public class ArvArv {
                 // -------------------------
 
                 // ----- inserir -----
-                arvore.inserir(filminho);
+                //arvore.inserir(filminho);
                 // -------------------
 
             }
