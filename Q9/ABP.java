@@ -13,7 +13,7 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public char elemento; // conte�do do no
+    public char elemento; // conte?do do no
     public No esq, dir; // filhos da esq e dir
 
     // ------------------------------------------------------------
@@ -201,6 +201,7 @@ public class ABP {
         // ----- inicialização das variáveis -----
         String linha = "";
         Arvore arvore = new Arvore();
+        char subs;
         // ----------------------------------------
 
         Scanner entrada = new Scanner(System.in);
@@ -208,7 +209,12 @@ public class ABP {
         while(entrada.hasNextLine()) {
 
             linha = entrada.nextLine();
-            char subs = linha.charAt(0);
+            
+            try {
+                subs = linha.charAt(0);
+            } catch (Exception e) {
+                subs = ' ';
+            }
 
             if ((subs == 'I') && (linha.charAt(1) == ' ')) {
                 arvore.inserir(linha.charAt(2));
