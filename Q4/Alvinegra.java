@@ -750,7 +750,7 @@ class Filme {
         readOrcamento(arquivo);
         readKey(arquivo);
     }
-    // ----------------
+    // ---------------- 
 }
 
 public class Alvinegra {
