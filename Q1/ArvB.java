@@ -376,7 +376,7 @@ class Filme {
 
         try {
 
-            while (!linha.contains("Tíulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
