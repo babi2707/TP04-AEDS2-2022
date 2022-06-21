@@ -333,12 +333,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("T�tulo original")) {
+            while (!linha.contains("Título original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("T�tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -474,7 +474,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situa��o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -483,11 +483,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situa��o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situa��o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -497,7 +497,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Or�amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -505,13 +505,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Or�amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Or�amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
