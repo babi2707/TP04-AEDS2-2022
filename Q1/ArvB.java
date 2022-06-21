@@ -17,18 +17,18 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public Filme filme; // conte�do do no
-    public No esq, dir; // filhos da esq e dir
+    public Filme filme;
+    public No esq, dir;
 
     // ------------------------------------------------------------
 
     // ----------------------- construtores -----------------------
 
-    public No (Filme filme) {
+    public No(Filme filme) {
         this(filme, null, null);
     }
 
-    public No (Filme filme, No esq, No dir) {
+    public No(Filme filme, No esq, No dir) {
         this.filme = filme;
         this.esq = esq;
         this.dir = dir;
@@ -55,30 +55,30 @@ class Arvore {
 
     // ----------------------- pesquisar -----------------------
 
-    public boolean pesquisar (String x) throws Exception {
+    public boolean pesquisar(String x) {
         MyIO.println(x);
         MyIO.print("=>raiz");
         return pesquisar(x, raiz);
     }
 
-    private boolean pesquisar (String x, No i) throws Exception {
-
+    private boolean pesquisar(String x, No i) {
         boolean resp;
-
         if (i == null) {
             MyIO.println(" NAO");
             resp = false;
+
         } else if (x.compareTo(i.filme.getTitulo_Original()) == i.filme.getTitulo_Original().compareTo(x)) {
             MyIO.println(" SIM");
             resp = true;
+
         } else if (x.compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x)) {
             MyIO.print(" esq");
             resp = pesquisar(x, i.esq);
+
         } else {
             MyIO.print(" dir");
             resp = pesquisar(x, i.dir);
         }
-
         return resp;
     }
 
@@ -93,10 +93,13 @@ class Arvore {
     private No inserir(Filme x, No i) throws Exception {
         if (i == null) {
             i = new No(x);
+
         } else if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) < i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
             i.esq = inserir(x, i.esq);
+
         } else if (x.getTitulo_Original().compareTo(i.filme.getTitulo_Original()) > i.filme.getTitulo_Original().compareTo(x.getTitulo_Original())) {
             i.dir = inserir(x, i.dir);
+
         } else {
             throw new Exception("Erro ao inserir!");
         }
@@ -108,12 +111,11 @@ class Arvore {
 
     // ----------------------- remover -----------------------
 
-    public void remover (String x) throws Exception {
+    public void remover(String x) throws Exception {
         raiz = remover(x, raiz);
     }
 
-    private No remover (String x, No i) throws Exception {
-        
+    private No remover(String x, No i) throws Exception {
 
         if (i == null) {
             throw new Exception("Erro ao remover!");
@@ -141,17 +143,17 @@ class Arvore {
 
     // ----------------------- maior esquerda -----------------------
 
-    private No maiorEsq (No i, No j) {
+    private No maiorEsq(No i, No j) {
 
         if (j.dir == null) {
             i.filme = j.filme;
             j = j.esq;
+
         } else {
             j.dir = maiorEsq(i, j.dir);
         }
-
         return j;
-    } 
+    }
 
     // ---------------------------------------------------------------
 }
@@ -170,7 +172,7 @@ class Filme {
     private float Orcamento;
     private ArrayList<String> Key_Words;
 
-    String folder = "./tmp/filmes/";
+    String folder = "/tmp/filmes/";
 
     // ------------------------------------------------------------
 
@@ -374,12 +376,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("T�tulo original")) {
+            while (!linha.contains("Tíulo original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("T�tulo original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("Tíulo original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -515,7 +517,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situa��o -----
+    // ----- Situação -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -524,11 +526,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situa��o")) {
+            while (!linha.contains("<bdi>Situação")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situa��o ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -538,7 +540,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Or�amento -----
+    // ----- Orçamento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -546,13 +548,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Or�amento")) {
+        while (!linha.contains("<p><strong><bdi>Orçamento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Or�amento", "");
+        linha = linha.replace("Orçamento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
@@ -608,6 +610,20 @@ class Filme {
 
     // ---------------------------
 
+    // ----- tudo -----
+    public void readAll(String arquivo) throws Exception {
+        readNome(arquivo);
+        readTitulo(arquivo);
+        readData(arquivo);
+        readDuracao(arquivo);
+        readGenero(arquivo);
+        readIdioma(arquivo);
+        readSituacao(arquivo);
+        readOrcamento(arquivo);
+        readKey(arquivo);
+    }
+    // ----------------
+
     // ------------------------------------------------------------
 }
 
@@ -627,38 +643,31 @@ public class ArvB {
         MyIO.setCharset("utf-8");
 
         // ----- inicializa��o das vari�veis -----
-        String s, s2, title;
-        int n;
         Arvore arvore = new Arvore();
+        String s;
         // ----------------------------------------
 
         // ----- primeira parte do pub.in -----
         while (true) {
+
             s = MyIO.readLine();
+            if (isFim(s)) {
 
-            if (isFim(s) == true) { break; }
+                break;
+            }
 
-            Filme movies = new Filme(); 
-
-            movies = new Filme();
-            movies.readNome(s);
-            movies.readTitulo(s);
-            movies.readData(s);
-            movies.readDuracao(s);
-            movies.readGenero(s);
-            movies.readIdioma(s);
-            movies.readSituacao(s);
-            movies.readOrcamento(s);
-            movies.readKey(s);
-
+            Filme movies = new Filme();
+            movies.readAll(s);
             arvore.inserir(movies);
         }
         // ------------------------------------
 
         // ----- segunda parte do pub.in -----
+
+        String s2 = "";
     
         s2 = MyIO.readLine(); // ler a primeira linha da segunda parte
-        n = Integer.parseInt(s2); // primeira linha � a qtd de objetos a serem inseridos/removidos
+        int n = Integer.parseInt(s2); // primeira linha � a qtd de objetos a serem inseridos/removidos
 
         // --- for das inser��es e remo��es ---
         for (int i = 0; i < n; i++) {
@@ -669,20 +678,12 @@ public class ArvB {
             
             
             // ----- inserir -----
-            if (linha.compareTo("I") == 0) {
+            if(linha.compareTo("I") == 0){
 
-                Filme filminho = new Filme(); 
+                Filme filminho = new Filme();
 
                 // ----- ler o arquivo -----
-                filminho.readNome(x);
-                filminho.readTitulo(x);
-                filminho.readData(x);
-                filminho.readDuracao(x);
-                filminho.readGenero(x);
-                filminho.readIdioma(x);
-                filminho.readSituacao(x);
-                filminho.readOrcamento(x);
-                filminho.readKey(x);
+                filminho.readAll(x);
                 // -------------------------
 
                 // ----- inserir -----
@@ -696,7 +697,7 @@ public class ArvB {
 
             else if (linha.compareTo("R") == 0) {
 
-                arvore.remover(x);
+                //arvore.remover(x);
 
             }
 
@@ -708,10 +709,13 @@ public class ArvB {
         // -----------------------------------
 
         // ----- terceira parte do pub.in -----
+        String title;
         while (true) {
             title = MyIO.readLine();
 
-            if (isFim(title) == true) { break; }
+            if (isFim(title) == true) { 
+                break; 
+            }
 
             arvore.pesquisar(title);
         }
