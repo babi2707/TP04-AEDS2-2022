@@ -13,7 +13,7 @@ class No {
 
     // ------------------------- atributos -------------------------
     
-    public int elemento; // conte�do do no
+    public int elemento; // conte?do do no
     public No esq, dir; // filhos da esq e dir
 
     // ------------------------------------------------------------
