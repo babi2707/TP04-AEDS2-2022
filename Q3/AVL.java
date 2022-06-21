@@ -263,7 +263,7 @@ class Filme {
     private float Orcamento;
     private ArrayList<String> Key_Words;
 
-    String folder = "/tmp/filmes/";
+    String folder = "./tmp/filmes/";
 
     // ------------------------------------------------------------
 
@@ -467,12 +467,12 @@ class Filme {
 
         try {
 
-            while (!linha.contains("Título original")) {
+            while (!linha.contains("TÃ­tulo original")) {
 
                 linha = readArq.readLine();
             }
 
-            this.setTitulo_Original(removeTags(linha.replace("Título original", "").trim()));
+            this.setTitulo_Original(removeTags(linha.replace("TÃ­tulo original", "").trim()));
 
         } catch (NullPointerException npe) {
             this.setTitulo_Original(" " + getNome());
@@ -608,7 +608,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Situação -----
+    // ----- SituaÃ§Ã£o -----
     public void readSituacao(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -617,11 +617,11 @@ class Filme {
         String linha = readArq.readLine();
 
         try {
-            while (!linha.contains("<bdi>Situação")) {
+            while (!linha.contains("<bdi>SituaÃ§Ã£o")) {
                 linha = readArq.readLine();
             }
 
-            this.setSituacao(removeTags(linha).trim().replace("Situação ", ""));
+            this.setSituacao(removeTags(linha).trim().replace("SituaÃ§Ã£o ", ""));
         } catch (IOException except) {
             except.printStackTrace();
         }
@@ -631,7 +631,7 @@ class Filme {
 
     // ---------------------------
 
-    // ----- Orçamento -----
+    // ----- OrÃ§amento -----
     public void readOrcamento(String arquivo) throws Exception {
 
         FileReader arq = new FileReader(folder + arquivo);
@@ -639,13 +639,13 @@ class Filme {
 
         String linha = readArq.readLine();
 
-        while (!linha.contains("<p><strong><bdi>Orçamento")) {
+        while (!linha.contains("<p><strong><bdi>OrÃ§amento")) {
             linha = readArq.readLine();
         }
 
         linha = linha.trim();
         linha = removeTags(linha);
-        linha = linha.replace("Orçamento", "");
+        linha = linha.replace("OrÃ§amento", "");
         linha = linha.substring(1);
         linha = linha.replace("$", "");
 
